@@ -1,0 +1,1 @@
+export 'package:bloc_rick_morty/domain/repositories/peticion_details_repository/peticion_details_repository.dart';

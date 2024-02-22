@@ -1,0 +1,1 @@
+export 'package:bloc_rick_morty/data/data_sources_impl/list_character_datasource_impl/list_character_datasource_impl.dart';
