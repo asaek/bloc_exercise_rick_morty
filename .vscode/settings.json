@@ -10,4 +10,5 @@
     "editor.formatOnSave": true,
     "files.refactoring.autoSave": false,
     "dart.experimentalRefactors": true,
+    "cmake.sourceDirectory": "/Volumes/SaSSD_1TB/Flutter_Ext/Tutoriales/Mios/bloc_rick_morty/linux",
 }

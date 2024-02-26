@@ -3,7 +3,7 @@ import 'package:bloc_rick_morty/domain/entities/entities.dart';
 class CharacterEntity {
   final int id;
   final String name;
-  final String status;
+  final bool status;
   final String species;
   final String type;
   final String gender;

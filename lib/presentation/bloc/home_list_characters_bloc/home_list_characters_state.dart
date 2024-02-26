@@ -3,6 +3,7 @@ part of 'home_list_characters_bloc.dart';
 class HomeListCharactersState extends Equatable {
   // final List<CharacterEntity> characters;
   final PeticionDetailsEntity peticionDetailsEntity;
+  final int page;
   const HomeListCharactersState({
     this.peticionDetailsEntity = const PeticionDetailsEntity(
       characters: [],
@@ -11,25 +12,22 @@ class HomeListCharactersState extends Equatable {
       prev: '',
       error: '',
     ),
+    this.page = 0,
   });
 
-  //! Es solamente una funcion para copiar el estado actual y modificar uno o varios valores
-  PeticionDetailsEntity copyWith({
+  HomeListCharactersState copyWith({
     PeticionDetailsEntity? peticionDetailsEntity,
+    required int page,
   }) {
-    return PeticionDetailsEntity(
-      characters: peticionDetailsEntity?.characters ??
-          this.peticionDetailsEntity.characters,
-      error: peticionDetailsEntity?.error ?? this.peticionDetailsEntity.error,
-      count: peticionDetailsEntity?.count ?? this.peticionDetailsEntity.count,
-      next: peticionDetailsEntity?.next ?? this.peticionDetailsEntity.next,
-      prev: peticionDetailsEntity?.prev ?? this.peticionDetailsEntity.prev,
+    return HomeListCharactersState(
+      peticionDetailsEntity:
+          peticionDetailsEntity ?? this.peticionDetailsEntity,
+      page: page,
     );
   }
 
+  int get nextPage => page + 1;
+
   @override
-  List<Object> get props => [
-        // characters,
-        peticionDetailsEntity,
-      ];
+  List<Object> get props => [peticionDetailsEntity, page];
 }

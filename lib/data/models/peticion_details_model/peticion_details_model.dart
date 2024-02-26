@@ -21,10 +21,10 @@ class PeticionDetailsModel {
 
   factory PeticionDetailsModel.fromJson(Map<String, dynamic> json) =>
       PeticionDetailsModel(
-        count: json["count"],
-        pages: json["pages"],
-        next: json["next"],
-        prev: json["prev"],
+        count: json["info"]["count"],
+        pages: json["info"]["pages"],
+        next: json["info"]["next"],
+        prev: json["info"]["prev"],
         charactersModel: List<CharacterModel>.from(
           json["results"].map((x) => CharacterModel.fromJson(x)),
         ),

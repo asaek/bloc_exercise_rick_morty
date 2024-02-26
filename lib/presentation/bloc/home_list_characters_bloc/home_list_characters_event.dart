@@ -8,9 +8,15 @@ sealed class HomeListCharactersEvent extends Equatable {
 }
 
 class FetchCharactersEvent extends HomeListCharactersEvent {
-  final int page;
+  const FetchCharactersEvent();
 
-  const FetchCharactersEvent({required this.page});
+  @override
+  List<Object> get props => [];
+}
+
+class FetchNextCharactersEvent extends HomeListCharactersEvent {
+  final int page;
+  const FetchNextCharactersEvent({required this.page});
 
   @override
   List<Object> get props => [page];

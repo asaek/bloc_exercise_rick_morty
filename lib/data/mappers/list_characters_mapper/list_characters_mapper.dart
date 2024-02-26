@@ -5,7 +5,7 @@ CharacterEntity characterMapper({required CharacterModel charactersModel}) {
   return CharacterEntity(
     id: charactersModel.id,
     name: charactersModel.name,
-    status: charactersModel.status,
+    status: (charactersModel.status == 'Alive') ? true : false,
     species: charactersModel.species,
     type: charactersModel.type,
     gender: charactersModel.gender,

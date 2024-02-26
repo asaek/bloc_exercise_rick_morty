@@ -21,6 +21,9 @@ class BlocsProviders extends StatelessWidget {
         BlocProvider<ThemeCubit>(
           create: (BuildContext context) => locator<ThemeCubit>(),
         ),
+        BlocProvider<HomeListCharactersBloc>(
+          create: (BuildContext context) => locator<HomeListCharactersBloc>(),
+        ),
       ],
       child: const MyApp(),
     );

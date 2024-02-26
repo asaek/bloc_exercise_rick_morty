@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const seedColor = Color(0xff91D32F);
+import '../../presentation/widgets/common/atoms/colores_atoms.dart';
 
 class AppTheme {
   final bool isDarkmode;

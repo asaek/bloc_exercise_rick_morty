@@ -1,7 +1,11 @@
+import 'package:bloc_rick_morty/presentation/helpers/snack_bar_rick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/entities.dart';
 import '../../bloc/blocs.dart';
+import '../../bloc/home_list_characters_bloc/home_list_characters_bloc.dart';
+import 'widgets/home_widgets.dart';
 
 class HomePage extends StatelessWidget {
   static const routerName = '/home';
@@ -9,144 +13,99 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Column(
         children: [
-          const _AppBar(),
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.zero,
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.8,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return _TarjetaPersonaje(
-                  index: index,
-                );
-              },
-            ),
-          ),
+          AppBarRick(),
+          _ListCharacters(),
         ],
       ),
     );
   }
 }
+// ! hay que hacer un scaffoldButtonFloating para el boton de busqueda
 
-class _TarjetaPersonaje extends StatelessWidget {
-  final int index;
-  const _TarjetaPersonaje({
+class _ListCharacters extends StatefulWidget {
+  const _ListCharacters({
     super.key,
-    required this.index,
   });
 
   @override
+  State<_ListCharacters> createState() => _ListCharactersState();
+}
+
+class _ListCharactersState extends State<_ListCharacters> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    context.read<HomeListCharactersBloc>().fetchInitialCharacters();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels + 400 >=
+          _scrollController.position.maxScrollExtent) {
+        final bool isLoading = context.read<HomeListCharactersBloc>().isLoading;
+        if (!isLoading) {
+          context.read<HomeListCharactersBloc>().fetchInitialCharacters();
+        }
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Material(
-        color: Colors.teal[100 * (index % 9)],
-        child: Center(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.greenAccent[400],
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Material(
-                    color: Colors.orange,
-                    child: Image.asset(
-                      'assets/images/pepinillo_rick_2.png',
-                      fit: BoxFit.cover,
-                      width: 120,
-                      height: 120,
-                    ),
-                  ),
-                ),
+    return Expanded(
+      child: BlocBuilder<HomeListCharactersBloc, HomeListCharactersState>(
+        builder: (context, state) {
+          final List<CharacterEntity> peticionDetailsEntity =
+              state.peticionDetailsEntity.characters;
+
+          final String? errores = state.peticionDetailsEntity.error;
+          if (peticionDetailsEntity.isEmpty) {
+            return Center(
+              child: Image.asset(
+                'assets/images/portal_3.gif',
+                fit: BoxFit.cover,
               ),
-              Text(
-                'Nombre $index',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ],
-          ),
-        ),
+            );
+          }
+
+          if (errores != null) {
+            SnackBar snackBar = snackBarRick(
+              errores: errores,
+              imagen: 'assets/images/pepinillo_rick.png',
+            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
+          }
+
+          return GridView.builder(
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(),
+            itemCount: peticionDetailsEntity.length,
+            controller: _scrollController,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.69,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              return TarjetaPersonaje(
+                characterEntity: peticionDetailsEntity[index],
+                index: index,
+              );
+            },
+          );
+        },
       ),
-    );
-  }
-}
-
-class _AppBar extends StatelessWidget {
-  const _AppBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: EdgeInsets.only(left: 5),
-        child: Row(
-          // crossAxisAlignment: CrossAxisAlignment.end,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _ImagenAppbar(),
-            _TitleImage(),
-            Spacer(),
-            _IconButton(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _IconButton extends StatelessWidget {
-  const _IconButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      iconSize: 50,
-      icon: const Icon(
-        Icons.light_mode_outlined,
-      ),
-      onPressed: () {
-        context.read<ThemeCubit>().toggleTheme();
-      },
-    );
-  }
-}
-
-class _TitleImage extends StatelessWidget {
-  const _TitleImage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset('assets/images/title.png', width: 250, height: 80);
-  }
-}
-
-class _ImagenAppbar extends StatelessWidget {
-  const _ImagenAppbar({
-    super.key,
-  });
-  @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return Image.asset(
-      'assets/images/rick_morty_dedos2.png',
-      width: size.width * 0.2,
     );
   }
 }
