@@ -25,12 +25,23 @@ void setupLocator() {
           peticionDetailsRepository: locator<PeticionDetailsRepository>()));
 
   //?  blocs
-  locator.registerSingleton(ThemeCubit());
   locator.registerSingleton<HomeListCharactersBloc>(HomeListCharactersBloc(
-      fetchCharactersUseCaseImpl: locator<FetchCharactersUseCase>()));
+    fetchCharactersUseCaseImpl: locator<FetchCharactersUseCase>(),
+    // seachCharacterUseCaseImpl: locator<SeachCharacterUseCase>(),
+  ));
+
+  //?  cubits
+  locator.registerSingleton<ThemeCubit>(ThemeCubit());
+  locator.registerSingleton<StatusDropCubit>(StatusDropCubit());
+  locator.registerSingleton<GeneroDropCubitCubit>(GeneroDropCubitCubit());
+  locator.registerSingleton<SpeciesDropCubit>(SpeciesDropCubit());
+
+  locator.registerSingleton<SearchBarCubit>(SearchBarCubit(
+      theyAreSearching: locator<HomeListCharactersBloc>().theyAreSearch));
+
+  locator.registerSingleton<StringForSearchCubit>(StringForSearchCubit(
+      stringForSearch: locator<HomeListCharactersBloc>().streamTextSearch));
+
+  locator.registerSingleton<TypeForSearchCubit>(TypeForSearchCubit(
+      typeForSearch: locator<HomeListCharactersBloc>().streamType));
 }
-
-
-//! leer lo de chatGPT y modificar todas las inyecciones de dependencias
-//! gracias GetIT ya no se inyecta las implementaciones si no las abstracciones de las clases
-//! modificar repository datasource y usecase de esta manera

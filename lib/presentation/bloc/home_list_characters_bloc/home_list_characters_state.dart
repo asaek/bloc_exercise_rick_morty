@@ -3,31 +3,35 @@ part of 'home_list_characters_bloc.dart';
 class HomeListCharactersState extends Equatable {
   // final List<CharacterEntity> characters;
   final PeticionDetailsEntity peticionDetailsEntity;
-  final int page;
+  final int pageActual;
   const HomeListCharactersState({
     this.peticionDetailsEntity = const PeticionDetailsEntity(
       characters: [],
       count: 1,
       next: '',
       prev: '',
-      error: '',
+      page: 0,
     ),
-    this.page = 0,
+    this.pageActual = 0,
   });
 
   HomeListCharactersState copyWith({
     PeticionDetailsEntity? peticionDetailsEntity,
-    required int page,
+    required int pageActual,
   }) {
     return HomeListCharactersState(
       peticionDetailsEntity:
           peticionDetailsEntity ?? this.peticionDetailsEntity,
-      page: page,
+      pageActual: pageActual,
     );
   }
 
-  int get nextPage => page + 1;
+  int get nextPage => pageActual + 1;
+
+  void resetCharacters() {
+    peticionDetailsEntity.characters.clear();
+  }
 
   @override
-  List<Object> get props => [peticionDetailsEntity, page];
+  List<Object> get props => [peticionDetailsEntity, pageActual];
 }

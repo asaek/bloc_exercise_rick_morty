@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/entities.dart';
 import '../../bloc/blocs.dart';
-import '../../bloc/home_list_characters_bloc/home_list_characters_bloc.dart';
+import '../../widgets/widgets.dart';
 import 'widgets/home_widgets.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,10 +20,37 @@ class HomePage extends StatelessWidget {
           _ListCharacters(),
         ],
       ),
+      floatingActionButton: FloatingActionButtonRick(),
     );
   }
 }
-// ! hay que hacer un scaffoldButtonFloating para el boton de busqueda
+
+class _ButtonAceptar extends StatelessWidget {
+  // final TextEditingController textController;
+  final bool state;
+  const _ButtonAceptar({
+    super.key,
+    required this.state,
+    // required this.textController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: state
+          ? () {
+              context.read<HomeListCharactersBloc>().searchCharacters();
+              // textController.clear();
+              // textController.dispose();
+            }
+          : null,
+      icon: Icon(
+        state ? Icons.play_arrow : Icons.close,
+        color: state ? Colors.black : Colors.red,
+      ),
+    );
+  }
+}
 
 class _ListCharacters extends StatefulWidget {
   const _ListCharacters({
@@ -42,11 +69,13 @@ class _ListCharactersState extends State<_ListCharacters> {
     context.read<HomeListCharactersBloc>().fetchInitialCharacters();
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels + 400 >=
+      // print(_scrollController.position.maxScrollExtent);
+      if (_scrollController.position.pixels + 300 >=
           _scrollController.position.maxScrollExtent) {
         final bool isLoading = context.read<HomeListCharactersBloc>().isLoading;
         if (!isLoading) {
-          context.read<HomeListCharactersBloc>().fetchInitialCharacters();
+          // print('Entron a cargar mas personajes');
+          context.read<HomeListCharactersBloc>().scrollingCall();
         }
       }
     });

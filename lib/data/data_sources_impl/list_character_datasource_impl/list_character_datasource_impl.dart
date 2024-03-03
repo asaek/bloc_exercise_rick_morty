@@ -7,49 +7,48 @@ import '../../models/models.dart';
 
 class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
   @override
-  Future<PeticionDetailsEntity> getCharacters({required int page}) async {
-    List<CharacterEntity> listCharacterEntity = [];
+  Future<PeticionDetailsEntity> getCharacters(
+      {required ParametersSearching searchingParameters}) async {
     final Dio dio = Dio(
       BaseOptions(
         baseUrl: 'https://rickandmortyapi.com/api/',
         queryParameters: {
-          'page': page,
+          'page': searchingParameters.page,
+          'name': searchingParameters.nombre,
+          'status': searchingParameters.status,
+          'species': searchingParameters.species,
+          'type': searchingParameters.type,
+          'gender': searchingParameters.gender,
         },
       ),
     );
 
     try {
-      final response = await dio.get('character');
-      if (response.statusCode == 200 && response.data != null) {
+      final Response<dynamic> response = await dio.get('character/');
+      if (response.statusCode == 200) {
         final PeticionDetailsModel peticionDetailsModel =
             PeticionDetailsModel.fromJson(response.data);
 
-        // if (peticionDetailsModel.charactersModel.isEmpty) {
-        //   return const PeticionDetailsEntity(
-        //     characters: [],
-        //     count: 0,
-        //     next: null,
-        //     prev: null,
-        //     error:
-        //         'Se llego al final de las paginas de personajes disponibles (42)',
-        //   );
-        // }
-
-        listCharacterEntity = peticionDetailsModel.charactersModel
-            .map((e) => characterMapper(charactersModel: e))
-            .toList();
+        final List<CharacterEntity> listSearchCharacter =
+            (peticionDetailsModel.charactersModel.isNotEmpty)
+                ? peticionDetailsModel.charactersModel
+                    .map((e) => characterMapper(charactersModel: e))
+                    .toList()
+                : [];
 
         final PeticionDetailsEntity peticionDetailsEntity =
             PeticionDetailsEntity(
-          characters: List<CharacterEntity>.from(listCharacterEntity),
+          characters: List<CharacterEntity>.from(listSearchCharacter),
           count: peticionDetailsModel.count,
           next: peticionDetailsModel.next,
           prev: peticionDetailsModel.prev,
+          page: peticionDetailsModel.pages,
         );
         return peticionDetailsEntity;
       } else {
         return const PeticionDetailsEntity(
           characters: [],
+          page: 0,
           count: 0,
           next: null,
           prev: null,
@@ -61,6 +60,7 @@ class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
 
       return PeticionDetailsEntity(
         characters: [],
+        page: 0,
         count: 0,
         next: null,
         prev: null,

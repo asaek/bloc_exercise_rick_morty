@@ -1,5 +1,6 @@
-import '../../entities/peticion_details_entity/peticion_details_entity.dart';
+import 'package:bloc_rick_morty/domain/entities/entities.dart';
 
 abstract class PeticionDetailsRepository {
-  Future<PeticionDetailsEntity> getPeticionDetails({required int page});
+  Future<PeticionDetailsEntity> getPeticionDetails(
+      {required ParametersSearching searchingParameters});
 }

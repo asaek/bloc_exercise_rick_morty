@@ -1,5 +1,5 @@
 import 'package:bloc_rick_morty/domain/entities/entities.dart';
-import 'package:bloc_rick_morty/presentation/widgets/common/atoms/colores_atoms.dart';
+import 'package:bloc_rick_morty/presentation/widgets/common/tokens/colores.dart';
 import 'package:flutter/material.dart';
 
 class TarjetaPersonaje extends StatelessWidget {

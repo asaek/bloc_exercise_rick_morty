@@ -21,8 +21,26 @@ class BlocsProviders extends StatelessWidget {
         BlocProvider<ThemeCubit>(
           create: (BuildContext context) => locator<ThemeCubit>(),
         ),
+        BlocProvider<SearchBarCubit>(
+          create: (BuildContext context) => locator<SearchBarCubit>(),
+        ),
         BlocProvider<HomeListCharactersBloc>(
           create: (BuildContext context) => locator<HomeListCharactersBloc>(),
+        ),
+        BlocProvider<StringForSearchCubit>(
+          create: (BuildContext context) => locator<StringForSearchCubit>(),
+        ),
+        BlocProvider<GeneroDropCubitCubit>(
+          create: (BuildContext context) => locator<GeneroDropCubitCubit>(),
+        ),
+        BlocProvider<StatusDropCubit>(
+          create: (BuildContext context) => locator<StatusDropCubit>(),
+        ),
+        BlocProvider<SpeciesDropCubit>(
+          create: (BuildContext context) => locator<SpeciesDropCubit>(),
+        ),
+        BlocProvider<TypeForSearchCubit>(
+          create: (BuildContext context) => locator<TypeForSearchCubit>(),
         ),
       ],
       child: const MyApp(),

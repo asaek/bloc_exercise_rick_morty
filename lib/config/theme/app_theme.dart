@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../presentation/widgets/common/atoms/colores_atoms.dart';
+import '../../presentation/widgets/common/tokens/colores.dart';
 
 class AppTheme {
   final bool isDarkmode;

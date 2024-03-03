@@ -1,5 +1,6 @@
-import '../../entities/peticion_details_entity/peticion_details_entity.dart';
+import '../../entities/entities.dart';
 
 abstract class PeticionDetailsDataSource {
-  Future<PeticionDetailsEntity> getCharacters({required int page});
+  Future<PeticionDetailsEntity> getCharacters(
+      {required ParametersSearching searchingParameters});
 }

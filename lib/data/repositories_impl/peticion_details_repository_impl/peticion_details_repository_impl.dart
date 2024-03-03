@@ -1,6 +1,5 @@
-import 'package:bloc_rick_morty/domain/entities/peticion_details_entity/peticion_details_entity.dart';
-
 import '../../../domain/data_sources/data_sources.dart';
+import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repositories.dart';
 
 class PeticionDetailsRepositoryImpl implements PeticionDetailsRepository {
@@ -9,9 +8,9 @@ class PeticionDetailsRepositoryImpl implements PeticionDetailsRepository {
   PeticionDetailsRepositoryImpl({required this.peticionDetailsDataSource});
 
   @override
-  Future<PeticionDetailsEntity> getPeticionDetails({required int page}) {
-    //! las excepciones tambien se tiene que manejar aqui
-
-    return peticionDetailsDataSource.getCharacters(page: page);
+  Future<PeticionDetailsEntity> getPeticionDetails(
+      {required ParametersSearching searchingParameters}) {
+    return peticionDetailsDataSource.getCharacters(
+        searchingParameters: searchingParameters);
   }
 }
