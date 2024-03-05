@@ -22,14 +22,31 @@ class HomeListCharactersBloc
 
   HomeListCharactersBloc({
     required this.fetchCharactersUseCaseImpl,
-    // required this.seachCharacterUseCaseImpl,
   }) : super(const HomeListCharactersState()) {
     on<FetchCharactersEvent>(_onFetchCharacters);
-    // on<StringForSearchEvent>(_onStringForSearch);
   }
   void _onFetchCharacters(
       FetchCharactersEvent event, Emitter<HomeListCharactersState> emit) async {
+    if (state.peticionDetailsEntity.next == null) {
+      emit(
+        state.copyWith(
+          peticionDetailsEntity: PeticionDetailsEntity(
+            characters: state.peticionDetailsEntity.characters,
+            count: state.peticionDetailsEntity.count,
+            next: state.peticionDetailsEntity.next,
+            prev: state.peticionDetailsEntity.prev,
+            page: state.peticionDetailsEntity.page,
+            error: 'Ya no hay mas personajes',
+          ),
+          // ! Creo que la pagina actual esta mal
+          pageActual: event.parametersSearching.page,
+        ),
+      );
+      return;
+    }
+
     _isLoading = true;
+
     final PeticionDetailsEntity peticionfetchCharacters =
         await fetchCharactersUseCaseImpl.callCharacters(
       searchingParameters: ParametersSearching(
@@ -41,9 +58,7 @@ class HomeListCharactersBloc
         type: event.parametersSearching.type,
       ),
     );
-    // ! estoy probando type si esta devolviendo pero truena al hacer scroll
-    // ! significa que esta mal el llamado de mas personajes
-    // ! falta agregar los demas filtros
+    // ! falta agregar los demas filtros y terminamos la busqueda
 
     (peticionfetchCharacters.error != null)
         ? emit(

@@ -1,4 +1,5 @@
 import 'package:bloc_rick_morty/presentation/bloc/blocs.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../data/data_sources_impl/data_sources_impl.dart';
@@ -44,4 +45,8 @@ void setupLocator() {
 
   locator.registerSingleton<TypeForSearchCubit>(TypeForSearchCubit(
       typeForSearch: locator<HomeListCharactersBloc>().streamType));
+
+  //! Extras
+  //? ScrollControllers
+  locator.registerLazySingleton<ScrollController>(() => ScrollController());
 }

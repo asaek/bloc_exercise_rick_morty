@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/entities/entities.dart';
 import '../../bloc/blocs.dart';
+import '../../bloc/service_locator.dart';
 import '../../widgets/widgets.dart';
 import 'widgets/home_widgets.dart';
 
@@ -62,18 +63,22 @@ class _ListCharacters extends StatefulWidget {
 }
 
 class _ListCharactersState extends State<_ListCharacters> {
-  final _scrollController = ScrollController();
+  final ScrollController _scrollController = locator<ScrollController>();
 
   @override
   void initState() {
     context.read<HomeListCharactersBloc>().fetchInitialCharacters();
 
     _scrollController.addListener(() {
-      // print(_scrollController.position.maxScrollExtent);
       if (_scrollController.position.pixels + 300 >=
           _scrollController.position.maxScrollExtent) {
         final bool isLoading = context.read<HomeListCharactersBloc>().isLoading;
-        if (!isLoading) {
+        final String? errores = context
+            .read<HomeListCharactersBloc>()
+            .state
+            .peticionDetailsEntity
+            .error;
+        if (!isLoading && errores == null) {
           // print('Entron a cargar mas personajes');
           context.read<HomeListCharactersBloc>().scrollingCall();
         }
@@ -84,6 +89,8 @@ class _ListCharactersState extends State<_ListCharacters> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(() {});
+
     _scrollController.dispose();
     super.dispose();
   }

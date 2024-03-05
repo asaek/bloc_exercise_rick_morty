@@ -1,4 +1,5 @@
 import 'package:bloc_rick_morty/domain/entities/entities.dart';
+import 'package:bloc_rick_morty/presentation/bloc/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -247,8 +248,13 @@ class ModalButton extends StatelessWidget {
           onTap: () {
             if (isAccept) {
               context.read<HomeListCharactersBloc>().searchCharacters();
+              locator<ScrollController>().animateTo(
+                0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
+              );
             } else {
-              // context.read<SearchBarCubit>().changeSearchBar();
+              // * Cancelar
             }
             Navigator.pop(context);
           },
