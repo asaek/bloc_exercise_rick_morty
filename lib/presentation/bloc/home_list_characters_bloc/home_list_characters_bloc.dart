@@ -51,9 +51,9 @@ class HomeListCharactersBloc
         await fetchCharactersUseCaseImpl.callCharacters(
       searchingParameters: ParametersSearching(
         page: event.parametersSearching.page,
-        gender: null,
-        status: null,
-        species: null,
+        gender: event.parametersSearching.gender,
+        status: event.parametersSearching.status,
+        species: event.parametersSearching.species,
         nombre: event.parametersSearching.nombre,
         type: event.parametersSearching.type,
       ),
@@ -95,7 +95,7 @@ class HomeListCharactersBloc
 
   bool get isLoading => _isLoading;
 
-  // ? llamado a los Eventos
+  // ? llamado a Eventos
   // * Searching Characters
   void searchCharacters() {
     state.resetCharacters();
@@ -103,9 +103,9 @@ class HomeListCharactersBloc
       parametersSearching: ParametersSearching(
         page: 1,
         nombre: _parametersSearching.nombre,
-        gender: null,
-        status: null,
-        species: null,
+        gender: _parametersSearching.gender,
+        status: _parametersSearching.status,
+        species: _parametersSearching.species,
         type: _parametersSearching.type,
       ),
     ));
@@ -146,6 +146,18 @@ class HomeListCharactersBloc
 
   void streamType(String type) {
     _parametersSearching.type = type;
+  }
+
+  void streamStatus(Statuss status) {
+    _parametersSearching.status = status;
+  }
+
+  void streamSpecies(Species species) {
+    _parametersSearching.species = species;
+  }
+
+  void streamGender(Gender gender) {
+    _parametersSearching.gender = gender;
   }
 
   //? este es una prueba para ver como se conporta la comunicacion entre el blocs

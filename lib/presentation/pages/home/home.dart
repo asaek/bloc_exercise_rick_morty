@@ -123,6 +123,18 @@ class _ListCharactersState extends State<_ListCharacters> {
             });
           }
 
+          // if (peticionDetailsEntity.isEmpty) {
+          //   SnackBar snackBar = snackBarRick(
+          //     errores: 'No se encontraron personajes con ese nombre',
+          //     imagen: 'assets/images/pepinillo_rick.png',
+          //   );
+          //   WidgetsBinding.instance.addPostFrameCallback((_) {
+          //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          //   });
+          // }
+
+          print('Se esta construyendo el gridview');
+
           return GridView.builder(
             padding: EdgeInsets.zero,
             scrollDirection: Axis.vertical,
@@ -134,10 +146,21 @@ class _ListCharactersState extends State<_ListCharacters> {
               childAspectRatio: 0.69,
             ),
             itemBuilder: (BuildContext context, int index) {
-              return TarjetaPersonaje(
-                characterEntity: peticionDetailsEntity[index],
-                index: index,
-              );
+              if (index < peticionDetailsEntity.length) {
+                return TarjetaPersonaje(
+                  characterEntity: peticionDetailsEntity[index],
+                  index: index,
+                );
+              } else {
+                //* Si no hay mas personajes se envian muchos sizebox al momento de
+                //* hacer una busqueda personalizada
+                return const SizedBox();
+              }
+
+              // return TarjetaPersonaje(
+              //   characterEntity: peticionDetailsEntity[index],
+              //   index: index,
+              // );
             },
           );
         },

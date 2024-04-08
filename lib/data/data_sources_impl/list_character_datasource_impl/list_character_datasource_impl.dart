@@ -15,10 +15,16 @@ class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
         queryParameters: {
           'page': searchingParameters.page,
           'name': searchingParameters.nombre,
-          'status': searchingParameters.status,
-          'species': searchingParameters.species,
+          'status': (searchingParameters.status == null)
+              ? null
+              : searchingParameters.status.toString().split('.').last,
+          'species': (searchingParameters.species == null)
+              ? null
+              : searchingParameters.species.toString().split('.').last,
           'type': searchingParameters.type,
-          'gender': searchingParameters.gender,
+          'gender': (searchingParameters.gender == null)
+              ? null
+              : searchingParameters.gender.toString().split('.').last,
         },
       ),
     );

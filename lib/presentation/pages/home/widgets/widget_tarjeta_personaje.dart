@@ -33,6 +33,7 @@ class TarjetaPersonaje extends StatelessWidget {
               //   textAlign: TextAlign.center,
               //   style: Theme.of(context).textTheme.titleSmall,
               // ),
+
               Text(
                 origin,
                 textAlign: TextAlign.center,

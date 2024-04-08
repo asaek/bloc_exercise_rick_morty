@@ -121,9 +121,7 @@ class EspecieDropDownButton extends StatelessWidget {
 }
 
 class StatusDropDownButton extends StatelessWidget {
-  const StatusDropDownButton({
-    super.key,
-  });
+  const StatusDropDownButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +183,7 @@ class NameSearchTexfield extends StatelessWidget {
       focusNode: FocusNode(),
       decoration: const InputDecoration(
         border: InputBorder.none,
-        hintText: 'Search character',
+        hintText: 'Search Character',
         enabledBorder: InputBorder.none,
       ),
       onChanged: (val) {
@@ -248,6 +246,7 @@ class ModalButton extends StatelessWidget {
           onTap: () {
             if (isAccept) {
               context.read<HomeListCharactersBloc>().searchCharacters();
+
               locator<ScrollController>().animateTo(
                 0,
                 duration: const Duration(milliseconds: 500),

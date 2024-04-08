@@ -33,13 +33,21 @@ void setupLocator() {
 
   //?  cubits
   locator.registerSingleton<ThemeCubit>(ThemeCubit());
-  locator.registerSingleton<StatusDropCubit>(StatusDropCubit());
-  locator.registerSingleton<GeneroDropCubitCubit>(GeneroDropCubitCubit());
-  locator.registerSingleton<SpeciesDropCubit>(SpeciesDropCubit());
+  locator.registerSingleton<StatusDropCubit>(StatusDropCubit(
+    statusForSearch: locator<HomeListCharactersBloc>().streamStatus,
+  ));
+
+  locator.registerSingleton<GeneroDropCubitCubit>(GeneroDropCubitCubit(
+    genderForSearch: locator<HomeListCharactersBloc>().streamGender,
+  ));
+  locator.registerSingleton<SpeciesDropCubit>(SpeciesDropCubit(
+    speciesForSearch: locator<HomeListCharactersBloc>().streamSpecies,
+  ));
 
   locator.registerSingleton<SearchBarCubit>(SearchBarCubit(
       theyAreSearching: locator<HomeListCharactersBloc>().theyAreSearch));
 
+  // !
   locator.registerSingleton<StringForSearchCubit>(StringForSearchCubit(
       stringForSearch: locator<HomeListCharactersBloc>().streamTextSearch));
 
