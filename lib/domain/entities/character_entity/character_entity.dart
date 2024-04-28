@@ -11,6 +11,7 @@ class CharacterEntity {
   final OriginAndLocationEntity location;
   final String image;
   final List<String> episode;
+  // final String? error;
   // final String url;
 
   const CharacterEntity({
@@ -24,6 +25,7 @@ class CharacterEntity {
     required this.location,
     required this.image,
     required this.episode,
+    // this.error,
     // required this.url,
   });
 }

@@ -11,6 +11,7 @@ class HomeListCharactersState extends Equatable {
       next: '',
       prev: '',
       page: 0,
+      isDetailSearch: false,
     ),
     this.pageActual = 0,
   });

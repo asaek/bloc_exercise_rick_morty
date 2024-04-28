@@ -11,7 +11,8 @@ class HomeListCharactersBloc
     extends Bloc<HomeListCharactersEvent, HomeListCharactersState> {
   final FetchCharactersUseCase fetchCharactersUseCaseImpl;
   bool _isLoading = false;
-  final ParametersSearching _parametersSearching = ParametersSearching(
+  bool _isDetailSearch = false;
+  ParametersSearchingEntity _parametersSearching = ParametersSearchingEntity(
     page: 0,
     nombre: null,
     gender: null,
@@ -27,7 +28,7 @@ class HomeListCharactersBloc
   }
   void _onFetchCharacters(
       FetchCharactersEvent event, Emitter<HomeListCharactersState> emit) async {
-    if (state.peticionDetailsEntity.next == null) {
+    if (state.peticionDetailsEntity.next == null && !_isDetailSearch) {
       emit(
         state.copyWith(
           peticionDetailsEntity: PeticionDetailsEntity(
@@ -36,6 +37,7 @@ class HomeListCharactersBloc
             next: state.peticionDetailsEntity.next,
             prev: state.peticionDetailsEntity.prev,
             page: state.peticionDetailsEntity.page,
+            isDetailSearch: false,
             error: 'Ya no hay mas personajes',
           ),
           // ! Creo que la pagina actual esta mal
@@ -49,7 +51,7 @@ class HomeListCharactersBloc
 
     final PeticionDetailsEntity peticionfetchCharacters =
         await fetchCharactersUseCaseImpl.callCharacters(
-      searchingParameters: ParametersSearching(
+      searchingParameters: ParametersSearchingEntity(
         page: event.parametersSearching.page,
         gender: event.parametersSearching.gender,
         status: event.parametersSearching.status,
@@ -58,8 +60,7 @@ class HomeListCharactersBloc
         type: event.parametersSearching.type,
       ),
     );
-    // ! falta agregar los demas filtros y terminamos la busqueda
-
+    print(peticionfetchCharacters);
     (peticionfetchCharacters.error != null)
         ? emit(
             state.copyWith(
@@ -70,6 +71,7 @@ class HomeListCharactersBloc
                 prev: state.peticionDetailsEntity.prev,
                 page: state.peticionDetailsEntity.page,
                 error: peticionfetchCharacters.error,
+                isDetailSearch: state.peticionDetailsEntity.isDetailSearch,
               ),
               pageActual: event.parametersSearching.page,
             ),
@@ -85,6 +87,7 @@ class HomeListCharactersBloc
                 next: peticionfetchCharacters.next,
                 prev: peticionfetchCharacters.prev,
                 page: peticionfetchCharacters.page,
+                isDetailSearch: peticionfetchCharacters.isDetailSearch,
               ),
               pageActual: event.parametersSearching.page,
             ),
@@ -97,10 +100,11 @@ class HomeListCharactersBloc
 
   // ? llamado a Eventos
   // * Searching Characters
-  void searchCharacters() {
+  void searchCharacters({required bool isDetailSearch}) {
     state.resetCharacters();
+    _isDetailSearch = isDetailSearch;
     add(FetchCharactersEvent(
-      parametersSearching: ParametersSearching(
+      parametersSearching: ParametersSearchingEntity(
         page: 1,
         nombre: _parametersSearching.nombre,
         gender: _parametersSearching.gender,
@@ -111,11 +115,23 @@ class HomeListCharactersBloc
     ));
   }
 
+  void resetHistorySearch() {
+    _parametersSearching = ParametersSearchingEntity(
+      page: 1,
+      nombre: null,
+      gender: null,
+      status: null,
+      species: null,
+      type: null,
+    );
+  }
+
   // * Llamado al hacer scroll
-  void scrollingCall() {
+  void scrollingCall({required bool isDetailSearch}) {
+    _isDetailSearch = isDetailSearch;
     add(
       FetchCharactersEvent(
-        parametersSearching: ParametersSearching(
+        parametersSearching: ParametersSearchingEntity(
           page: state.nextPage,
           nombre: _parametersSearching.nombre,
           gender: _parametersSearching.gender,
@@ -131,33 +147,46 @@ class HomeListCharactersBloc
   void fetchInitialCharacters() {
     add(
       FetchCharactersEvent(
-        parametersSearching: ParametersSearching(
+        parametersSearching: ParametersSearchingEntity(
           page: 1,
-          nombre: _parametersSearching.nombre,
+          // nombre: _parametersSearching.nombre,
         ),
       ),
     );
   }
 
+  //! Comunicacion de blocs
   // * Guardado de busqueda con comunicacion de blocs
-  void streamTextSearch(String text) {
+  void streamTextSearch(String? text) {
     _parametersSearching.nombre = text;
   }
 
-  void streamType(String type) {
+  void streamType(String? type) {
     _parametersSearching.type = type;
   }
 
   void streamStatus(Statuss status) {
-    _parametersSearching.status = status;
+    if (status != Statuss.selecciona) {
+      _parametersSearching.status = status;
+    } else {
+      _parametersSearching.status = null;
+    }
   }
 
   void streamSpecies(Species species) {
-    _parametersSearching.species = species;
+    if (species != Species.selecciona) {
+      _parametersSearching.species = species;
+    } else {
+      _parametersSearching.species = null;
+    }
   }
 
   void streamGender(Gender gender) {
-    _parametersSearching.gender = gender;
+    if (gender != Gender.selecciona) {
+      _parametersSearching.gender = gender;
+    } else {
+      _parametersSearching.gender = null;
+    }
   }
 
   //? este es una prueba para ver como se conporta la comunicacion entre el blocs

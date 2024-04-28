@@ -9,7 +9,7 @@ typedef SpeciesForSearch = void Function(Species value);
 class SpeciesDropCubit extends Cubit<SpeciesDropCubitState> {
   final SpeciesForSearch? speciesForSearch;
   SpeciesDropCubit({
-    Species species = Species.human,
+    Species species = Species.selecciona,
     this.speciesForSearch,
   }) : super(SpeciesDropCubitState(species: species));
 

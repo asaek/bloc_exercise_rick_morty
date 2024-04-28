@@ -19,7 +19,7 @@ class AppBarRick extends StatelessWidget {
           children: [
             ImagenAppbar(),
             TitleImageRick(),
-            Spacer(),
+            // Spacer(),
             IconButtonRick(),
           ],
         ),

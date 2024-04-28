@@ -26,37 +26,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _ButtonAceptar extends StatelessWidget {
-  // final TextEditingController textController;
-  final bool state;
-  const _ButtonAceptar({
-    super.key,
-    required this.state,
-    // required this.textController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: state
-          ? () {
-              context.read<HomeListCharactersBloc>().searchCharacters();
-              // textController.clear();
-              // textController.dispose();
-            }
-          : null,
-      icon: Icon(
-        state ? Icons.play_arrow : Icons.close,
-        color: state ? Colors.black : Colors.red,
-      ),
-    );
-  }
-}
-
 class _ListCharacters extends StatefulWidget {
-  const _ListCharacters({
-    super.key,
-  });
+  const _ListCharacters();
 
   @override
   State<_ListCharacters> createState() => _ListCharactersState();
@@ -80,7 +51,9 @@ class _ListCharactersState extends State<_ListCharacters> {
             .error;
         if (!isLoading && errores == null) {
           // print('Entron a cargar mas personajes');
-          context.read<HomeListCharactersBloc>().scrollingCall();
+          context
+              .read<HomeListCharactersBloc>()
+              .scrollingCall(isDetailSearch: false);
         }
       }
     });

@@ -4,9 +4,10 @@ import '../../repositories/repositories.dart';
 
 sealed class FetchCharactersUseCase {
   Future<PeticionDetailsEntity> callCharacters(
-      {required ParametersSearching searchingParameters});
+      {required ParametersSearchingEntity searchingParameters});
 }
 
+//* Implementación del Use Case la clase FetchLocationUseCase
 class FetchCharactersUseCaseImpl implements FetchCharactersUseCase {
   final PeticionDetailsRepository peticionDetailsRepository;
 
@@ -14,7 +15,7 @@ class FetchCharactersUseCaseImpl implements FetchCharactersUseCase {
 
   @override
   Future<PeticionDetailsEntity> callCharacters(
-      {required ParametersSearching searchingParameters}) async {
+      {required ParametersSearchingEntity searchingParameters}) async {
     return await peticionDetailsRepository.getPeticionDetails(
         searchingParameters: searchingParameters);
   }

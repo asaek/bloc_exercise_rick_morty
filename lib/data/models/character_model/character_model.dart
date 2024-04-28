@@ -1,18 +1,19 @@
 import 'dart:convert';
 
 class CharacterModel {
-  final int id;
-  final String name;
-  final String status;
-  final String species;
-  final String type;
-  final String gender;
-  final OriginAndLocationModel origin;
-  final OriginAndLocationModel location;
-  final String image;
-  final List<String> episode;
-  final String url;
-  final DateTime created;
+  final int? id;
+  final String? name;
+  final String? status;
+  final String? species;
+  final String? type;
+  final String? gender;
+  final OriginAndLocationModel? origin;
+  final OriginAndLocationModel? location;
+  final String? image;
+  final List<String>? episode;
+  final String? url;
+  final DateTime? created;
+  final String? error;
 
   CharacterModel({
     required this.id,
@@ -27,6 +28,7 @@ class CharacterModel {
     required this.episode,
     required this.url,
     required this.created,
+    this.error,
   });
 
   factory CharacterModel.fromRawJson(String str) =>

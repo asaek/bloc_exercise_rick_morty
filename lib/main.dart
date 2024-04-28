@@ -27,6 +27,9 @@ class BlocsProviders extends StatelessWidget {
         BlocProvider<HomeListCharactersBloc>(
           create: (BuildContext context) => locator<HomeListCharactersBloc>(),
         ),
+        BlocProvider<CharacterSelectedBloc>(
+          create: (BuildContext context) => locator<CharacterSelectedBloc>(),
+        ),
         BlocProvider<StringForSearchCubit>(
           create: (BuildContext context) => locator<StringForSearchCubit>(),
         ),
@@ -41,6 +44,9 @@ class BlocsProviders extends StatelessWidget {
         ),
         BlocProvider<TypeForSearchCubit>(
           create: (BuildContext context) => locator<TypeForSearchCubit>(),
+        ),
+        BlocProvider<LocationCharactersCubit>(
+          create: (BuildContext context) => locator<LocationCharactersCubit>(),
         ),
       ],
       child: const MyApp(),

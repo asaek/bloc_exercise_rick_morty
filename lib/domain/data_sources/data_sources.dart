@@ -1,1 +1,3 @@
+export 'package:bloc_rick_morty/domain/data_sources/get_character_datasource/get_character_datasource.dart';
 export 'package:bloc_rick_morty/domain/data_sources/list_characters_datasource/list_characters_datasource.dart';
+export 'package:bloc_rick_morty/domain/data_sources/location_character_datasource/location_character_datasource.dart';

@@ -8,7 +8,8 @@ class StringForSearchState extends Equatable {
     required String? stringForSearch,
   }) {
     return StringForSearchState(
-      stringForSearch: stringForSearch ?? this.stringForSearch,
+      stringForSearch: stringForSearch,
+      // stringForSearch: stringForSearch ?? this.stringForSearch,
     );
   }
 

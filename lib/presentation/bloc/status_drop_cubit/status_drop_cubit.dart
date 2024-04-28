@@ -10,7 +10,7 @@ typedef StatusForSearch = void Function(Statuss value);
 class StatusDropCubit extends Cubit<StatusDropCubitCubitState> {
   final StatusForSearch? statusForSearch;
   StatusDropCubit({
-    Statuss status = Statuss.alive,
+    Statuss status = Statuss.selecciona,
     this.statusForSearch,
   }) : super(StatusDropCubitCubitState(status: status));
 

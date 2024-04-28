@@ -8,7 +8,7 @@ sealed class HomeListCharactersEvent extends Equatable {
 }
 
 class FetchCharactersEvent extends HomeListCharactersEvent {
-  final ParametersSearching parametersSearching;
+  final ParametersSearchingEntity parametersSearching;
   const FetchCharactersEvent({required this.parametersSearching});
 
   @override

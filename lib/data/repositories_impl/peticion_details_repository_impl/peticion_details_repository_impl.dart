@@ -9,7 +9,7 @@ class PeticionDetailsRepositoryImpl implements PeticionDetailsRepository {
 
   @override
   Future<PeticionDetailsEntity> getPeticionDetails(
-      {required ParametersSearching searchingParameters}) {
+      {required ParametersSearchingEntity searchingParameters}) {
     return peticionDetailsDataSource.getCharacters(
         searchingParameters: searchingParameters);
   }

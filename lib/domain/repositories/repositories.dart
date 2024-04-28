@@ -1,1 +1,2 @@
+export 'package:bloc_rick_morty/domain/repositories/location_character_repository/location_character_repository.dart';
 export 'package:bloc_rick_morty/domain/repositories/peticion_details_repository/peticion_details_repository.dart';

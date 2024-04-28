@@ -8,7 +8,8 @@ class TypeForSearchState extends Equatable {
     required String? typeForSearch,
   }) {
     return TypeForSearchState(
-      typeForSearch: typeForSearch ?? this.typeForSearch,
+      typeForSearch: typeForSearch,
+      // typeForSearch: typeForSearch ?? this.typeForSearch,
     );
   }
 

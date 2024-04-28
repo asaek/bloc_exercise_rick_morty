@@ -15,7 +15,6 @@ class FloatingActionButtonRick extends StatelessWidget {
     return FloatingActionButton(
       child: const Icon(Icons.search),
       onPressed: () {
-        // context.read<SearchBarCubit>().changeSearchBar();
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -37,7 +36,7 @@ class FloatingActionButtonRick extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: 10),
-                        const NameSearchTexfield(),
+                        const _NameSearchTexfield(),
                         const SizedBox(height: 10),
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,13 +45,13 @@ class FloatingActionButtonRick extends StatelessWidget {
                             Column(
                               children: [
                                 Text('Genero'),
-                                GenderDropDownButton(),
+                                _GenderDropDownButton(),
                               ],
                             ),
                             Column(
                               children: [
                                 Text('Estado'),
-                                StatusDropDownButton(),
+                                _StatusDropDownButton(),
                               ],
                             ),
                           ],
@@ -60,23 +59,23 @@ class FloatingActionButtonRick extends StatelessWidget {
                         const Column(
                           children: [
                             Text('Especie'),
-                            EspecieDropDownButton(),
+                            _EspecieDropDownButton(),
                           ],
                         ),
-                        const TypeSearchTexfield(),
+                        const _TypeSearchTexfield(),
                       ],
                     ),
                   ),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ModalButton(
+                      _ModalButton(
                         text: 'Cancelar',
                         color: cancelarColor,
                         isAccept: false,
                       ),
-                      // Spacer(),
-                      ModalButton(
+                      _searchClean(),
+                      _ModalButton(
                         text: 'Buscar',
                         color: aceptarColor,
                         isAccept: true,
@@ -93,10 +92,56 @@ class FloatingActionButtonRick extends StatelessWidget {
   }
 }
 
-class EspecieDropDownButton extends StatelessWidget {
-  const EspecieDropDownButton({
-    super.key,
-  });
+class _searchClean extends StatelessWidget {
+  const _searchClean();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      width: 100,
+      child: Material(
+        color: Colors.amberAccent,
+        borderRadius: const BorderRadius.vertical(
+          top: modalBorderOnlyRadius,
+        ),
+        child: InkWell(
+          onTap: () {
+            locator<TextEditingController>(instanceName: 'searchCharacter')
+                .clear();
+            locator<TextEditingController>(instanceName: 'searchType').clear();
+            context
+                .read<StringForSearchCubit>()
+                .changeStringForSearch(value: null);
+
+            context.read<TypeForSearchCubit>().changeTypeForSearch(value: null);
+            //* limpiar enums
+            context
+                .read<SpeciesDropCubit>()
+                .changeSpecies(species: Species.selecciona);
+            context
+                .read<GeneroDropCubitCubit>()
+                .changeValue(gender: Gender.selecciona);
+            context
+                .read<StatusDropCubit>()
+                .changeValue(status: Statuss.selecciona);
+
+            context.read<HomeListCharactersBloc>().resetHistorySearch();
+          },
+          child: Center(
+            child: Text(
+              'Limpiar',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EspecieDropDownButton extends StatelessWidget {
+  const _EspecieDropDownButton();
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +165,8 @@ class EspecieDropDownButton extends StatelessWidget {
   }
 }
 
-class StatusDropDownButton extends StatelessWidget {
-  const StatusDropDownButton({super.key});
+class _StatusDropDownButton extends StatelessWidget {
+  const _StatusDropDownButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -145,8 +190,8 @@ class StatusDropDownButton extends StatelessWidget {
   }
 }
 
-class GenderDropDownButton extends StatelessWidget {
-  const GenderDropDownButton({
+class _GenderDropDownButton extends StatelessWidget {
+  const _GenderDropDownButton({
     super.key,
   });
 
@@ -171,56 +216,65 @@ class GenderDropDownButton extends StatelessWidget {
   }
 }
 
-class NameSearchTexfield extends StatelessWidget {
-  const NameSearchTexfield({
-    super.key,
-  });
+class _NameSearchTexfield extends StatelessWidget {
+  const _NameSearchTexfield();
 
   @override
   Widget build(BuildContext context) {
+    locator<TextEditingController>(instanceName: 'searchCharacter').text =
+        context.read<StringForSearchCubit>().state.stringForSearch ?? '';
+
     return TextField(
       enabled: true,
       focusNode: FocusNode(),
+      controller:
+          locator<TextEditingController>(instanceName: 'searchCharacter'),
       decoration: const InputDecoration(
         border: InputBorder.none,
         hintText: 'Search Character',
         enabledBorder: InputBorder.none,
       ),
       onChanged: (val) {
-        context.read<StringForSearchCubit>().changeStringForSearch(value: val);
+        context
+            .read<StringForSearchCubit>()
+            .changeStringForSearch(value: (val == '') ? null : val);
       },
     );
   }
 }
 
-class TypeSearchTexfield extends StatelessWidget {
-  const TypeSearchTexfield({
+class _TypeSearchTexfield extends StatelessWidget {
+  const _TypeSearchTexfield({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    locator<TextEditingController>(instanceName: 'searchType').text =
+        context.read<TypeForSearchCubit>().state.typeForSearch ?? '';
     return TextField(
       enabled: true,
       focusNode: FocusNode(),
+      controller: locator<TextEditingController>(instanceName: 'searchType'),
       decoration: const InputDecoration(
         border: InputBorder.none,
         hintText: 'Search Type',
         enabledBorder: InputBorder.none,
       ),
       onChanged: (val) {
-        context.read<TypeForSearchCubit>().changeTypeForSearch(value: val);
+        context
+            .read<TypeForSearchCubit>()
+            .changeTypeForSearch(value: (val == '') ? null : val);
       },
     );
   }
 }
 
-class ModalButton extends StatelessWidget {
+class _ModalButton extends StatelessWidget {
   final String text;
   final Color color;
   final bool isAccept;
-  const ModalButton({
-    super.key,
+  const _ModalButton({
     required this.text,
     required this.color,
     required this.isAccept,
@@ -245,7 +299,9 @@ class ModalButton extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (isAccept) {
-              context.read<HomeListCharactersBloc>().searchCharacters();
+              context
+                  .read<HomeListCharactersBloc>()
+                  .searchCharacters(isDetailSearch: true);
 
               locator<ScrollController>().animateTo(
                 0,

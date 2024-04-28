@@ -15,7 +15,7 @@ class IconButtonRick extends StatelessWidget {
         final darkMode = state.isDarkMode;
 
         return IconButton(
-          iconSize: 50,
+          iconSize: 40,
           icon: Icon(
             (darkMode) ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
           ),

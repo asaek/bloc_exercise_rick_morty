@@ -7,7 +7,7 @@ typedef GenderForSearch = void Function(Gender value);
 class GeneroDropCubitCubit extends Cubit<Gender> {
   final GenderForSearch? genderForSearch;
 
-  GeneroDropCubitCubit({this.genderForSearch}) : super(Gender.male);
+  GeneroDropCubitCubit({this.genderForSearch}) : super(Gender.selecciona);
 
   void changeValue({required Gender gender}) {
     emit(gender);

@@ -8,7 +8,7 @@ import '../../models/models.dart';
 class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
   @override
   Future<PeticionDetailsEntity> getCharacters(
-      {required ParametersSearching searchingParameters}) async {
+      {required ParametersSearchingEntity searchingParameters}) async {
     final Dio dio = Dio(
       BaseOptions(
         baseUrl: 'https://rickandmortyapi.com/api/',
@@ -35,12 +35,12 @@ class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
         final PeticionDetailsModel peticionDetailsModel =
             PeticionDetailsModel.fromJson(response.data);
 
-        final List<CharacterEntity> listSearchCharacter =
-            (peticionDetailsModel.charactersModel.isNotEmpty)
-                ? peticionDetailsModel.charactersModel
-                    .map((e) => characterMapper(charactersModel: e))
-                    .toList()
-                : [];
+        final List<CharacterEntity> listSearchCharacter = (peticionDetailsModel
+                .charactersModel.isNotEmpty)
+            ? peticionDetailsModel.charactersModel
+                .map((e) => characterModelToEntityMapper(charactersModel: e))
+                .toList()
+            : [];
 
         final PeticionDetailsEntity peticionDetailsEntity =
             PeticionDetailsEntity(
@@ -49,6 +49,7 @@ class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
           next: peticionDetailsModel.next,
           prev: peticionDetailsModel.prev,
           page: peticionDetailsModel.pages,
+          isDetailSearch: null,
         );
         return peticionDetailsEntity;
       } else {
@@ -58,6 +59,7 @@ class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
           count: 0,
           next: null,
           prev: null,
+          isDetailSearch: null,
           error: 'Error en la peticion de datos',
         );
       }
@@ -70,6 +72,7 @@ class PeticionDetailsDataSourceImpl implements PeticionDetailsDataSource {
         count: 0,
         next: null,
         prev: null,
+        isDetailSearch: null,
         error: e.toString(),
       );
     }
