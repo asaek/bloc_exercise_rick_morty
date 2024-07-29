@@ -8,6 +8,7 @@ class PeticionDetailsEntity {
   final int page;
   final bool? isDetailSearch;
   final List<CharacterEntity> characters;
+
   const PeticionDetailsEntity({
     required this.isDetailSearch,
     required this.page,

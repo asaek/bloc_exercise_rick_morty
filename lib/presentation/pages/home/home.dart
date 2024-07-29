@@ -41,6 +41,8 @@ class _ListCharactersState extends State<_ListCharacters> {
     context.read<HomeListCharactersBloc>().fetchInitialCharacters();
 
     _scrollController.addListener(() {
+      // print(_scrollController.position.pixels);
+
       if (_scrollController.position.pixels + 300 >=
           _scrollController.position.maxScrollExtent) {
         final bool isLoading = context.read<HomeListCharactersBloc>().isLoading;
@@ -49,6 +51,9 @@ class _ListCharactersState extends State<_ListCharacters> {
             .state
             .peticionDetailsEntity
             .error;
+
+        // print('$isLoading $errores');
+
         if (!isLoading && errores == null) {
           // print('Entron a cargar mas personajes');
           context
@@ -96,45 +101,40 @@ class _ListCharactersState extends State<_ListCharacters> {
             });
           }
 
-          // if (peticionDetailsEntity.isEmpty) {
-          //   SnackBar snackBar = snackBarRick(
-          //     errores: 'No se encontraron personajes con ese nombre',
-          //     imagen: 'assets/images/pepinillo_rick.png',
-          //   );
-          //   WidgetsBinding.instance.addPostFrameCallback((_) {
-          //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          //   });
-          // }
-
           print('Se esta construyendo el gridview');
 
-          return GridView.builder(
-            padding: EdgeInsets.zero,
-            scrollDirection: Axis.vertical,
-            physics: const BouncingScrollPhysics(),
-            itemCount: peticionDetailsEntity.length,
-            controller: _scrollController,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.69,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              if (index < peticionDetailsEntity.length) {
-                return TarjetaPersonaje(
-                  characterEntity: peticionDetailsEntity[index],
-                  index: index,
-                );
-              } else {
-                //* Si no hay mas personajes se envian muchos sizebox al momento de
-                //* hacer una busqueda personalizada
-                return const SizedBox();
-              }
-
-              // return TarjetaPersonaje(
-              //   characterEntity: peticionDetailsEntity[index],
-              //   index: index,
-              // );
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<HomeListCharactersBloc>().fetchInitialCharacters();
             },
+            child: GridView.builder(
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(),
+              itemCount: peticionDetailsEntity.length,
+              controller: _scrollController,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.69,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                if (index < peticionDetailsEntity.length) {
+                  return TarjetaPersonaje(
+                    characterEntity: peticionDetailsEntity[index],
+                    index: index,
+                  );
+                } else {
+                  //* Si no hay mas personajes se envian muchos sizebox al momento de
+                  //* hacer una busqueda personalizada
+                  return const SizedBox();
+                }
+
+                // return TarjetaPersonaje(
+                //   characterEntity: peticionDetailsEntity[index],
+                //   index: index,
+                // );
+              },
+            ),
           );
         },
       ),

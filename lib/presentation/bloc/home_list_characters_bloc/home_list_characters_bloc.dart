@@ -12,6 +12,8 @@ class HomeListCharactersBloc
   final FetchCharactersUseCase fetchCharactersUseCaseImpl;
   bool _isLoading = false;
   bool _isDetailSearch = false;
+  bool _isInitialLoad = false;
+
   ParametersSearchingEntity _parametersSearching = ParametersSearchingEntity(
     page: 0,
     nombre: null,
@@ -26,8 +28,10 @@ class HomeListCharactersBloc
   }) : super(const HomeListCharactersState()) {
     on<FetchCharactersEvent>(_onFetchCharacters);
   }
+
   void _onFetchCharacters(
       FetchCharactersEvent event, Emitter<HomeListCharactersState> emit) async {
+    //* si es la ultima pagina
     if (state.peticionDetailsEntity.next == null && !_isDetailSearch) {
       emit(
         state.copyWith(
@@ -40,6 +44,7 @@ class HomeListCharactersBloc
             isDetailSearch: false,
             error: 'Ya no hay mas personajes',
           ),
+
           // ! Creo que la pagina actual esta mal
           pageActual: event.parametersSearching.page,
         ),
@@ -60,38 +65,63 @@ class HomeListCharactersBloc
         type: event.parametersSearching.type,
       ),
     );
+
     print(peticionfetchCharacters);
-    (peticionfetchCharacters.error != null)
-        ? emit(
-            state.copyWith(
-              peticionDetailsEntity: PeticionDetailsEntity(
-                characters: state.peticionDetailsEntity.characters,
-                count: state.peticionDetailsEntity.count,
-                next: state.peticionDetailsEntity.next,
-                prev: state.peticionDetailsEntity.prev,
-                page: state.peticionDetailsEntity.page,
-                error: peticionfetchCharacters.error,
-                isDetailSearch: state.peticionDetailsEntity.isDetailSearch,
-              ),
-              pageActual: event.parametersSearching.page,
+
+    if (peticionfetchCharacters.error != null) {
+      emit(
+        state.copyWith(
+          peticionDetailsEntity: PeticionDetailsEntity(
+            characters: state.peticionDetailsEntity.characters,
+            count: state.peticionDetailsEntity.count,
+            next: state.peticionDetailsEntity.next,
+            prev: state.peticionDetailsEntity.prev,
+            page: state.peticionDetailsEntity.page,
+            error: peticionfetchCharacters.error,
+            isDetailSearch: state.peticionDetailsEntity.isDetailSearch,
+          ),
+          pageActual: event.parametersSearching.page,
+        ),
+      );
+    } else {
+      if (_isInitialLoad) {
+        _isInitialLoad = false;
+
+        emit(
+          state.copyWith(
+            peticionDetailsEntity: PeticionDetailsEntity(
+              characters: peticionfetchCharacters.characters,
+              count: peticionfetchCharacters.count,
+              next: peticionfetchCharacters.next,
+              prev: peticionfetchCharacters.prev,
+              page: peticionfetchCharacters.page,
+              isDetailSearch: peticionfetchCharacters.isDetailSearch,
             ),
-          )
-        : emit(
-            state.copyWith(
-              peticionDetailsEntity: PeticionDetailsEntity(
-                characters: [
-                  ...state.peticionDetailsEntity.characters,
-                  ...peticionfetchCharacters.characters,
-                ],
-                count: peticionfetchCharacters.count,
-                next: peticionfetchCharacters.next,
-                prev: peticionfetchCharacters.prev,
-                page: peticionfetchCharacters.page,
-                isDetailSearch: peticionfetchCharacters.isDetailSearch,
-              ),
-              pageActual: event.parametersSearching.page,
-            ),
-          );
+            pageActual: event.parametersSearching.page,
+          ),
+        );
+        _isLoading = false;
+        return;
+      }
+
+      emit(
+        state.copyWith(
+          peticionDetailsEntity: PeticionDetailsEntity(
+            characters: [
+              ...state.peticionDetailsEntity.characters,
+              ...peticionfetchCharacters.characters,
+            ],
+            count: peticionfetchCharacters.count,
+            next: peticionfetchCharacters.next,
+            prev: peticionfetchCharacters.prev,
+            page: peticionfetchCharacters.page,
+            isDetailSearch: peticionfetchCharacters.isDetailSearch,
+          ),
+          pageActual: event.parametersSearching.page,
+        ),
+      );
+    }
+
     await Future.delayed(const Duration(milliseconds: 500));
     _isLoading = false;
   }
@@ -145,6 +175,7 @@ class HomeListCharactersBloc
 
   // * Llamando por primera ves
   void fetchInitialCharacters() {
+    _isInitialLoad = true;
     add(
       FetchCharactersEvent(
         parametersSearching: ParametersSearchingEntity(
